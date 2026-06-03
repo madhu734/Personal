@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* ===== CSS Custom Properties ===== */
+        /* ===== CSS Custom Properties (Dark Theme Default) ===== */
         :root {
             --bg-primary: #030408; 
             --bg-secondary: #0a0b10;
@@ -32,7 +32,7 @@
             --text-tertiary: #94a3b8;
             --text-muted: #64748b;
 
-            /* Transformers Theme Colors */
+            /* Transformers Theme Colors (Fixed across themes) */
             --optimus-blue: #1e62f0;
             --optimus-red: #e63946;
             --bumblebee-yellow: #ffbe0b;
@@ -54,6 +54,28 @@
             --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* ===== Light Theme Overrides ===== */
+        body.light-mode {
+            --bg-primary: #f1f5f9; 
+            --bg-secondary: #e2e8f0;
+            /* Increased card opacity to maintain readability against the stronger image */
+            --bg-card: rgba(255, 255, 255, 0.80);
+            --bg-card-hover: rgba(255, 255, 255, 0.98);
+            --bg-elevated: #ffffff;
+
+            --border-subtle: rgba(0, 0, 0, 0.08);
+            --border-medium: rgba(0, 0, 0, 0.15);
+            --border-accent: rgba(58, 134, 255, 0.4);
+
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-tertiary: #475569;
+            --text-muted: #64748b;
+
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-card-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--border-accent);
+        }
+
         /* ===== Reset & Base ===== */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; font-size: 15px; } 
@@ -63,6 +85,7 @@
             color: var(--text-primary);
             line-height: 1.5;
             overflow-x: hidden;
+            transition: background-color var(--transition-smooth), color var(--transition-smooth);
         }
 
         /* ===== Cinematic/Tech Ambient Background ===== */
@@ -70,6 +93,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0; pointer-events: none; overflow: hidden;
             background-color: var(--bg-primary);
+            transition: background-color var(--transition-smooth);
         }
         
         /* Classy Image Background with Ken Burns Effect */
@@ -78,17 +102,30 @@
             background-image: url('https://i.postimg.cc/wvWpkTvZ/OP-BG.png');
             background-size: cover;
             background-position: center; 
-            opacity: 0.35; /* Perfect balance between visibility and text readability */
+            opacity: 0.35;
             z-index: 0;
             filter: contrast(115%) brightness(65%) saturate(120%);
             animation: dynamicBg 35s ease-in-out infinite alternate;
+            transition: opacity var(--transition-smooth), filter var(--transition-smooth);
         }
 
-        /* Subtle dark vignette overlay to make text pop */
+        /* Light Mode Background Adjustments - OPTIMIZED FOR VISIBILITY */
+        body.light-mode .ambient-bg-image {
+            opacity: 0.35; /* Increased opacity to show Optimus Prime better */
+            filter: contrast(110%) brightness(95%) saturate(105%); /* Adjusted contrast/brightness */
+        }
+
+        /* Subtle dark/light vignette overlay */
         .ambient-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, transparent 0%, rgba(3, 4, 8, 0.85) 100%);
             z-index: 1;
+            transition: background var(--transition-smooth);
+        }
+
+        /* Reduced white overlay strength so the background image pops */
+        body.light-mode .ambient-overlay {
+            background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(241, 245, 249, 0.75) 100%);
         }
 
         /* Smooth Cinematic Motion */
@@ -120,9 +157,16 @@
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             padding: 12px 0; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             background: rgba(3, 4, 8, 0.75); border-bottom: 1px solid var(--border-subtle);
+            transition: background var(--transition-smooth), border-color var(--transition-smooth);
         }
+        body.light-mode .nav {
+            background: rgba(241, 245, 249, 0.85);
+        }
+        
         .nav-inner { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         
+        .nav-left-controls { display: flex; align-items: center; gap: 12px; }
+
         .menu-btn {
             background: none; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
             cursor: pointer; padding: 8px 14px; display: flex; align-items: center; gap: 8px;
@@ -130,8 +174,28 @@
             transition: var(--transition-fast); background: rgba(255,255,255,0.02);
         }
         .menu-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--border-medium); color: var(--optimus-blue); }
+        body.light-mode .menu-btn { background: rgba(0,0,0,0.03); }
+        body.light-mode .menu-btn:hover { background: rgba(0,0,0,0.06); }
+        
         .menu-icon { display: flex; flex-direction: column; gap: 4px; }
         .menu-icon span { width: 18px; height: 2px; background: currentColor; border-radius: 2px; transition: 0.3s; }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none; border: 1px solid var(--border-subtle);
+            border-radius: 50%; width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-primary); cursor: pointer; transition: var(--transition-fast);
+            position: relative; overflow: hidden;
+            background: rgba(255,255,255,0.02);
+        }
+        body.light-mode .theme-toggle { background: rgba(0,0,0,0.03); }
+        .theme-toggle:hover { border-color: var(--optimus-blue); color: var(--optimus-blue); transform: scale(1.05); }
+        
+        .sun-icon, .moon-icon { width: 16px; height: 16px; position: absolute; transition: var(--transition-smooth); }
+        /* Hide moon in dark mode, hide sun in light mode */
+        body:not(.light-mode) .moon-icon { opacity: 0; transform: translateY(-20px) rotate(-90deg); }
+        body.light-mode .sun-icon { opacity: 0; transform: translateY(20px) rotate(90deg); }
 
         .nav-links { display: flex; gap: 24px; list-style: none; }
         .nav-links a { 
@@ -148,15 +212,17 @@
             background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 999;
             opacity: 0; pointer-events: none; transition: opacity var(--transition-smooth);
         }
+        body.light-mode .sidebar-overlay { background: rgba(255,255,255,0.4); }
         .sidebar-overlay.active { opacity: 1; pointer-events: all; }
         
         .sidebar {
             position: fixed; top: 0; left: -320px; width: 320px; max-width: 85vw; height: 100%;
             background: var(--bg-secondary); z-index: 1000; border-right: 1px solid var(--border-medium);
             padding: 30px 20px; box-shadow: 10px 0 30px rgba(0,0,0,0.8);
-            transition: left var(--transition-smooth); overflow-y: auto;
+            transition: left var(--transition-smooth), background-color var(--transition-smooth); overflow-y: auto;
             display: flex; flex-direction: column;
         }
+        body.light-mode .sidebar { box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
         .sidebar.active { left: 0; }
         .sidebar-close {
             position: absolute; top: 20px; right: 20px; background: none; border: none;
@@ -167,6 +233,7 @@
         .sidebar-content { flex-grow: 1; margin-top: 20px; }
         .sidebar-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--optimus-blue); margin-bottom: 15px; }
         .sidebar-item { margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 8px; }
+        body.light-mode .sidebar-item { border-bottom-color: rgba(0,0,0,0.05); }
         .sidebar-item h4 { font-size: 0.85rem; color: var(--text-primary); margin-bottom: 4px; font-weight: 600; }
         .sidebar-item p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
 
@@ -175,7 +242,7 @@
         .sidebar-cv-btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 4px;
             padding: 6px 14px; margin: 0 auto;
-            background: transparent; border: 1px solid rgba(255,255,255,0.05);
+            background: transparent; border: 1px solid var(--border-subtle);
             border-radius: 50px; color: var(--text-tertiary);
             font-size: 0.75rem; font-weight: 600; text-decoration: none; transition: var(--transition-fast);
             opacity: 0.5;
@@ -194,6 +261,7 @@
             animation: fadeInUp 0.8s ease-out;
             box-shadow: 0 8px 30px rgba(0,0,0,0.6);
         }
+        body.light-mode .profile-frame { box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
         .profile-frame img {
             width: 100%; height: 100%; border-radius: 30%; object-fit: cover;
             background: var(--bg-primary); border: 2px solid var(--bg-primary);
@@ -204,8 +272,9 @@
             font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 15px;
             animation: fadeInUp 0.8s ease-out 0.1s both;
         }
+        /* Madhu Gradient - Hardcoded to stay same in both modes */
         .hero h1 .gradient-text {
-            background: linear-gradient(135deg, var(--optimus-blue), var(--bumblebee-yellow));
+            background: linear-gradient(135deg, #1e62f0, #ffbe0b);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
@@ -259,10 +328,13 @@
             background: rgba(0,0,0,0.45); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); 
             padding: 20px; display: flex; flex-direction: column; transition: var(--transition-fast);
         }
+        body.light-mode .project-item { background: rgba(255,255,255,0.45); }
+        
         .project-item:hover { 
             border-color: var(--optimus-blue); background: rgba(0,0,0,0.7); 
             transform: translateY(-3px); box-shadow: 0 4px 20px rgba(58, 134, 255, 0.15); 
         }
+        body.light-mode .project-item:hover { background: rgba(255,255,255,0.8); }
         
         .project-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
         .project-header span { font-size: 1.3rem; }
@@ -290,7 +362,9 @@
             background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: 30px;
             font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); transition: var(--transition-fast);
         }
+        body.light-mode .skill-tag { background: rgba(0,0,0,0.02); }
         .skill-tag:hover { background: rgba(255,255,255,0.06); border-color: var(--optimus-blue); color: var(--text-primary); }
+        body.light-mode .skill-tag:hover { background: rgba(0,0,0,0.05); }
         .skill-dot { width: 6px; height: 6px; border-radius: 50%; }
         .dot-blue { background: var(--optimus-blue); } .dot-red { background: var(--optimus-red); } .dot-yellow { background: var(--bumblebee-yellow); }
 
@@ -299,6 +373,8 @@
             background: linear-gradient(180deg, var(--bg-card), rgba(0,0,0,0.7)); border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg); padding: 50px 30px; text-align: center;
         }
+        body.light-mode .contact-card { background: linear-gradient(180deg, var(--bg-card), rgba(255,255,255,0.9)); }
+        
         .contact-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.4rem, 2.5vw, 1.8rem); font-weight: 700; margin-bottom: 8px; }
         .contact-subtitle { font-size: 0.9rem; color: var(--text-tertiary); margin-bottom: 25px; }
         
@@ -308,7 +384,9 @@
             background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
             color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: var(--transition-fast);
         }
+        body.light-mode .contact-link { background: rgba(0,0,0,0.02); }
         .contact-link:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); color: var(--text-primary); border-color: var(--optimus-blue); }
+        body.light-mode .contact-link:hover { background: rgba(0,0,0,0.05); }
         .contact-link svg { width: 16px; height: 16px; }
 
         /* Footer */
@@ -319,29 +397,37 @@
         .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
-        /* ===== Responsive Design (Mobile First & Compact Optimization) ===== */
+        /* ===== Responsive Design (Mobile First & Compact) ===== */
         @media (max-width: 900px) {
             .span-7, .span-5 { grid-column: span 12; }
-            .nav-links { display: none; }
         }
         
         @media (max-width: 600px) {
-            /* Fix Background for Portrait Phones */
+            /* Mobile Nav Adjustments (Keep links visible & scale down) */
+            .nav-inner { padding: 0 12px; }
+            .nav-left-controls { gap: 8px; }
+            .menu-btn { padding: 6px 10px; font-size: 0.75rem; }
+            .theme-toggle { width: 30px; height: 30px; }
+            .sun-icon, .moon-icon { width: 14px; height: 14px; }
+            
+            .nav-links { gap: 12px; }
+            .nav-links a { font-size: 0.7rem; gap: 4px; }
+            .nav-links a svg { width: 12px; height: 12px; } /* Smaller icons instead of hiding */
+
+            /* Mobile Background Fix (Position head & chest perfectly) */
             .ambient-bg-image { 
-                background-position: 70% center; /* Focuses heavily on Optimus Prime's position */
+                background-position: 65% 15%; 
             }
 
-            /* Ultra Compact Layout Tweaks */
-            .hero { padding: 100px 0 30px; }
+            /* Compact layout adjustments */
+            .hero { padding: 110px 0 30px; }
             .profile-frame { width: 85px; height: 85px; margin-bottom: 16px; }
             .hero h1 { font-size: 2.1rem; margin-bottom: 10px; }
             .hero-bio { font-size: 0.9rem; line-height: 1.5; margin-bottom: 10px; }
 
             .section { padding: 40px 0; }
             .section-header { margin-bottom: 25px; }
-            .section-title { font-size: 1.4rem; }
             
-            /* Compact Bento Grid */
             .bento-grid { gap: 10px; }
             .bento-card { padding: 18px; }
             .card-icon { width: 38px; height: 38px; margin-bottom: 12px; }
@@ -350,7 +436,6 @@
             .card-description { font-size: 0.8rem; line-height: 1.5; margin-bottom: 10px; }
             .card-list li { font-size: 0.8rem; gap: 8px; }
             
-            /* Compact Projects Grid */
             .projects-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 15px; }
             .project-item { padding: 16px; }
             .project-header { margin-bottom: 8px; }
@@ -359,11 +444,9 @@
             .project-desc { font-size: 0.8rem; margin-bottom: 15px; }
             .project-link { padding: 6px 12px; font-size: 0.75rem; }
 
-            /* Skills adjustments */
             .skills-grid { gap: 6px; }
             .skill-tag { padding: 6px 12px; font-size: 0.75rem; }
 
-            /* Compact Contact Card */
             .contact-card { padding: 35px 20px; }
             .contact-title { font-size: 1.3rem; }
             .contact-subtitle { font-size: 0.85rem; margin-bottom: 20px; }
@@ -371,6 +454,12 @@
             .contact-link { width: 100%; justify-content: center; padding: 10px; font-size: 0.8rem; }
             
             .footer { padding: 15px 0; margin-top: 25px; }
+        }
+
+        /* For very small devices, hide link icons completely to fit text */
+        @media (max-width: 360px) {
+            .nav-links a svg { display: none; }
+            .nav-links { gap: 8px; }
         }
     </style>
 </head>
@@ -388,13 +477,28 @@
     <!-- Navigation -->
     <nav class="nav" id="navbar">
         <div class="nav-inner">
-            <!-- Sidebar Info Toggle Button -->
-            <button class="menu-btn" id="menuBtn">
-                <div class="menu-icon">
-                    <span></span><span></span><span></span>
-                </div>
-                Info
-            </button>
+            <div class="nav-left-controls">
+                <!-- Sidebar Info Toggle Button -->
+                <button class="menu-btn" id="menuBtn">
+                    <div class="menu-icon">
+                        <span></span><span></span><span></span>
+                    </div>
+                    Info
+                </button>
+                
+                <!-- Theme Toggle Button -->
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+                    <!-- Sun Icon (Light Mode) -->
+                    <svg class="sun-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <!-- Moon Icon (Dark Mode) -->
+                    <svg class="moon-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+            </div>
+
             <ul class="nav-links">
                 <li>
                     <a href="#showcase">
@@ -460,7 +564,7 @@
     <!-- Hero Section -->
     <header class="hero" id="hero">
         <div class="container">
-            <!-- New Profile Picture Frame -->
+            <!-- Profile Picture Frame -->
             <div class="profile-frame">
                 <img src="https://i.postimg.cc/Rh9gqc45/opp.jpg" alt="Tauhidul Islam Madhu">
             </div>
@@ -471,7 +575,7 @@
             </h1>
             
             <p class="hero-bio">
-                A final-year English student from Jahangirnagar University with limitless passion for technology, currently trying to become accountant as well! I specialize in finding smart reliable solutions; blending academics or anything with modern AI and server automation to build efficient systems with zero coding knowledge (Thanks to AI(s) anyway).
+                A final-year English student from Jahangirnagar University with limitless passion for technology, currently trying to become an accountant as well! I specialize in finding smart reliable solutions; blending academics or anything with modern AI and server automation to build efficient systems with zero coding knowledge (Thanks to AI(s) anyway).
             </p>
         </div>
     </header>
@@ -710,6 +814,12 @@
         menuBtn.addEventListener('click', toggleSidebar);
         closeSidebar.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+        });
 
         // Scroll Reveal Animation
         const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -40px 0px' };

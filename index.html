@@ -58,8 +58,8 @@
         body.light-mode {
             --bg-primary: #f1f5f9; 
             --bg-secondary: #e2e8f0;
-            /* Increased card opacity to maintain readability against the stronger image */
-            --bg-card: rgba(255, 255, 255, 0.80);
+            /* Increased card opacity slightly to maintain readability against the stronger background */
+            --bg-card: rgba(255, 255, 255, 0.85);
             --bg-card-hover: rgba(255, 255, 255, 0.98);
             --bg-elevated: #ffffff;
 
@@ -111,8 +111,8 @@
 
         /* Light Mode Background Adjustments - OPTIMIZED FOR VISIBILITY */
         body.light-mode .ambient-bg-image {
-            opacity: 0.35; /* Increased opacity to show Optimus Prime better */
-            filter: contrast(110%) brightness(95%) saturate(105%); /* Adjusted contrast/brightness */
+            opacity: 0.45; /* Slightly increased opacity so Optimus is more visible */
+            filter: contrast(115%) brightness(90%) saturate(110%); 
         }
 
         /* Subtle dark/light vignette overlay */
@@ -123,9 +123,9 @@
             transition: background var(--transition-smooth);
         }
 
-        /* Reduced white overlay strength so the background image pops */
+        /* Further reduced white overlay strength so the background image pops gracefully */
         body.light-mode .ambient-overlay {
-            background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(241, 245, 249, 0.75) 100%);
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, rgba(241, 245, 249, 0.60) 100%);
         }
 
         /* Smooth Cinematic Motion */
@@ -416,7 +416,7 @@
 
             /* Mobile Background Fix (Position head & chest perfectly) */
             .ambient-bg-image { 
-                background-position: 65% 15%; 
+                background-position: 82% 0%; 
             }
 
             /* Compact layout adjustments */

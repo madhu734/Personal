@@ -414,11 +414,12 @@
             .nav-links a { font-size: 0.7rem; gap: 4px; }
             .nav-links a svg { width: 12px; height: 12px; } /* Smaller icons instead of hiding */
 
-            /* Mobile Background Fix (Position head & chest perfectly) */
+            /* Mobile Background Fix (Perfect framing for existing Optimus image) */
             .ambient-bg-image { 
-                background-position: 73% 0%; 
-                top: -2%;
-                height: 104%;
+                background-position: 88% 15%; /* Moves focus exactly to Optimus on the right, keeping head in frame */
+                background-size: cover;
+                top: -5%;
+                height: 110%;
             }
 
             /* Compact layout adjustments */
